@@ -11,9 +11,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @IDE    ：IntelliJ IDEA
  * @Motto  ：ABC(Always Be Coding)
  * <p></p>
- * @Description ：高并发、秒杀 demo
+ * @Description ：高并发、秒杀 demo，模拟场景：减库存->创建订单->模拟支付
  */
-@MapperScan("com.shuishu.demo.mapper")
+@MapperScan("com.shuishu.demo.seckill.mapper")
 @SpringBootApplication
 public class HighConcurrencySeckillApplication {
 

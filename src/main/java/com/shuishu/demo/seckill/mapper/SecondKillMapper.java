@@ -3,6 +3,7 @@ package com.shuishu.demo.seckill.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.shuishu.demo.seckill.entity.SecondKill;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
@@ -29,9 +30,23 @@ public interface SecondKillMapper extends BaseMapper<SecondKill> {
     @Select(value = "SELECT * FROM seckill WHERE seckill_id=#{skgId} FOR UPDATE")
     SecondKill querySecondKillForUpdate(@Param("skgId") Long skgId);
 
+    /**
+     * 更新库存
+     *
+     * @param skgId -
+     * @return -
+     */
     @Update(value = "UPDATE seckill SET number=number-1 WHERE seckill_id=#{skgId} AND number > 0")
     int updateSecondKillById(@Param("skgId") long skgId);
 
+    /**
+     * 更新库存
+     *
+     * @param number  -
+     * @param skgId   -
+     * @param version -
+     * @return -
+     */
     @Update(value = "UPDATE seckill  SET number=number-#{number},version=version+1 WHERE seckill_id=#{skgId} AND version = #{version}")
-    int updateSecondKillByVersion(@Param("number") int number, @Param("skgId") long skgId, @Param("version")int version);
+    int updateSecondKillByVersion(@Param("number") int number, @Param("skgId") long skgId, @Param("version") int version);
 }

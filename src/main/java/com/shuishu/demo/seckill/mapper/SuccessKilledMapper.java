@@ -3,7 +3,7 @@ package com.shuishu.demo.seckill.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.shuishu.demo.seckill.entity.SuccessKilled;
-import org.springframework.stereotype.Repository;
+import org.apache.ibatis.annotations.Mapper;
 
 /**
  * @author ：谁书-ss
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository;
  * @description ：
  * <p></p>
  */
-@Repository
+@Mapper
 public interface SuccessKilledMapper extends BaseMapper<SuccessKilled> {
 
 }

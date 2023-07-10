@@ -44,7 +44,7 @@ public class SeckillController {
 
 
     @Operation(summary = "方式一：lock锁", description = "会出现超卖的情况：这里在业务方法开始加了锁，在业务方法结束后释放了锁。但这里的事务提交却不是这样的，有可能在事务提交之前，就已经把锁释放了，这样会导致商品超卖现象")
-    @PostMapping("start/lock")
+    @PostMapping("start/lock/one")
     public ApiResponse<String> startLock(long skgId) {
         try {
             log.info("开始秒杀方式一...");
@@ -53,7 +53,7 @@ public class SeckillController {
             if(apiResponse != null){
                 log.info("用户:{}--{}", userId, apiResponse.getMessage());
             }else{
-                log.info("用户:{}--{}", userId, "哎呦喂，人也太多了，请稍后！");
+                log.info("用户:{}--{}", userId, "人也太多了，请稍后！");
             }
             return apiResponse;
         } catch (Exception e) {
@@ -64,7 +64,7 @@ public class SeckillController {
 
 
     @Operation(summary = "方式一：改进版加锁", description = "可以解决事务未提交之前，锁释放的问题")
-    @PostMapping("start/lock2")
+    @PostMapping("start/lock/two")
     public ApiResponse<String> startLock2(long skgId) {
         // 在此处加锁
         lock.lock();
@@ -75,7 +75,7 @@ public class SeckillController {
             if(apiResponse != null){
                 log.info("用户:{}--{}", userId, apiResponse.getMessage());
             }else{
-                log.info("用户:{}--{}", userId, "哎呦喂，人也太多了，请稍后！");
+                log.info("用户:{}--{}", userId, "人也太多了，请稍后！");
             }
             return apiResponse;
         } catch (Exception e) {
@@ -92,7 +92,6 @@ public class SeckillController {
     @PostMapping("start/aop")
     public ApiResponse<String> startAop(long skgId) {
         // 在此处加锁
-        lock.lock();
         try {
             log.info("开始秒杀方式二...");
             final long userId = (int) (new Random().nextDouble() * (99999 - 10000 + 1)) + 10000;
@@ -100,7 +99,7 @@ public class SeckillController {
             if(apiResponse != null){
                 log.info("用户:{}--{}", userId, apiResponse.getMessage());
             }else{
-                log.info("用户:{}--{}", userId, "哎呦喂，人也太多了，请稍后！");
+                log.info("用户:{}--{}", userId, "人也太多了，请稍后！");
             }
             return apiResponse;
         } catch (Exception e) {
@@ -120,7 +119,7 @@ public class SeckillController {
             if(apiResponse != null){
                 log.info("用户:{}--{}", userId, apiResponse.getMessage());
             }else{
-                log.info("用户:{}--{}", userId, "哎呦喂，人也太多了，请稍后！");
+                log.info("用户:{}--{}", userId, "人也太多了，请稍后！");
             }
             return apiResponse;
         } catch (Exception e) {
@@ -131,7 +130,7 @@ public class SeckillController {
 
 
     @Operation(summary = "方式四：悲观锁2", description = "")
-    @PostMapping("/start/pes/lock/one")
+    @PostMapping("/start/pes/lock/two")
     public ApiResponse<String> startPesLockTwo(long skgId) {
         try {
             log.info("开始秒杀方式四...");
@@ -140,7 +139,7 @@ public class SeckillController {
             if(apiResponse != null){
                 log.info("用户:{}--{}", userId, apiResponse.getMessage());
             }else{
-                log.info("用户:{}--{}", userId, "哎呦喂，人也太多了，请稍后！");
+                log.info("用户:{}--{}", userId, "人也太多了，请稍后！");
             }
             return apiResponse;
         } catch (Exception e) {
@@ -151,7 +150,7 @@ public class SeckillController {
 
 
     @Operation(summary = "方式五：乐观锁", description = "乐观锁会出现大量的数据更新异常（抛异常就会导致购买失败），会出现少买的情况，不推荐使用乐观锁")
-    @PostMapping("/start/pes/lock/one")
+    @PostMapping("/start/opt/lock/one")
     public ApiResponse<String> startOptLock(long skgId) {
         try {
             log.info("开始秒杀方式四...");
@@ -160,7 +159,7 @@ public class SeckillController {
             if(apiResponse != null){
                 log.info("用户:{}--{}", userId, apiResponse.getMessage());
             }else{
-                log.info("用户:{}--{}", userId, "哎呦喂，人也太多了，请稍后！");
+                log.info("用户:{}--{}", userId, "人也太多了，请稍后！");
             }
             return apiResponse;
         } catch (Exception e) {

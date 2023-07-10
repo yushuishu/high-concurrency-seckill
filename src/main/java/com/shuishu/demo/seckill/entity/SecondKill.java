@@ -1,6 +1,10 @@
 package com.shuishu.demo.seckill.entity;
 
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.Version;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -19,8 +23,10 @@ import java.util.Date;
 @Setter
 @Getter
 @ToString
+@TableName("seckill")
 public class SecondKill {
 
+    @TableId(value = "seckill_id", type = IdType.AUTO)
     private Long seckillId;
 
     private String name;
@@ -33,5 +39,6 @@ public class SecondKill {
 
     private Date createTime;
 
+    @Version
     private Integer version;
 }

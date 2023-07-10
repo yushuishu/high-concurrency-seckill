@@ -94,6 +94,7 @@ public class SeckillServiceImpl implements SeckillService {
                 return ApiResponse.error(SecondKillEnum.StateEnum.END.getInfo());
             }
         } catch (Exception e) {
+            e.printStackTrace();
             throw new BusinessException("异常");
         } finally {
             // 释放锁
