@@ -74,9 +74,8 @@ public class SeckillServiceImpl implements SeckillService {
                 goodsInventoryMapper.updateById(goodsInventory);
                 // 创建秒杀成功订单
                 SeckillSuccess seckillSuccess = new SeckillSuccess();
-                seckillSuccess.setSeckillSuccessId(goodsInventoryId);
                 seckillSuccess.setUserId(userId);
-                seckillSuccess.setPaymentState(0);
+                seckillSuccess.setPaymentState(1);
                 seckillSuccess.setSeckillSuccessCreateTime(new Timestamp(System.currentTimeMillis()));
                 seckillSuccessMapper.insert(seckillSuccess);
                 // 支付
@@ -114,7 +113,6 @@ public class SeckillServiceImpl implements SeckillService {
                 goodsInventoryMapper.updateById(goodsInventory);
                 // 创建秒杀成功订单
                 SeckillSuccess seckillSuccess = new SeckillSuccess();
-                seckillSuccess.setSeckillSuccessId(goodsInventoryId);
                 seckillSuccess.setUserId(userId);
                 seckillSuccess.setPaymentState(0);
                 seckillSuccess.setSeckillSuccessCreateTime(new Timestamp(System.currentTimeMillis()));
@@ -157,7 +155,6 @@ public class SeckillServiceImpl implements SeckillService {
                 goodsInventoryMapper.updateById(goodsInventory);
                 // 创建秒杀成功订单
                 SeckillSuccess seckillSuccess = new SeckillSuccess();
-                seckillSuccess.setSeckillSuccessId(goodsInventoryId);
                 seckillSuccess.setUserId(userId);
                 seckillSuccess.setPaymentState(0);
                 seckillSuccess.setSeckillSuccessCreateTime(new Timestamp(System.currentTimeMillis()));
@@ -193,7 +190,6 @@ public class SeckillServiceImpl implements SeckillService {
                 goodsInventoryMapper.updateById(goodsInventory);
                 // 创建秒杀成功订单
                 SeckillSuccess seckillSuccess = new SeckillSuccess();
-                seckillSuccess.setSeckillSuccessId(goodsInventoryId);
                 seckillSuccess.setUserId(userId);
                 seckillSuccess.setPaymentState(0);
                 seckillSuccess.setSeckillSuccessCreateTime(new Timestamp(System.currentTimeMillis()));
@@ -225,7 +221,6 @@ public class SeckillServiceImpl implements SeckillService {
             if (result > 0) {
                 // 创建秒杀成功订单
                 SeckillSuccess seckillSuccess = new SeckillSuccess();
-                seckillSuccess.setSeckillSuccessId(goodsInventoryId);
                 seckillSuccess.setUserId(userId);
                 seckillSuccess.setPaymentState(0);
                 seckillSuccess.setSeckillSuccessCreateTime(new Timestamp(System.currentTimeMillis()));
@@ -261,7 +256,6 @@ public class SeckillServiceImpl implements SeckillService {
                 if (result > 0) {
                     // 创建秒杀成功订单
                     SeckillSuccess seckillSuccess = new SeckillSuccess();
-                    seckillSuccess.setSeckillSuccessId(goodsInventoryId);
                     seckillSuccess.setUserId(userId);
                     seckillSuccess.setPaymentState(0);
                     seckillSuccess.setSeckillSuccessCreateTime(new Timestamp(System.currentTimeMillis()));

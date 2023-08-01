@@ -21,3 +21,20 @@ spring:
       max-lifetime: 540000
       maximum-pool-size: 20
       minimum-idle: 10
+
+# knife4j的增强配置，不需要增强可以不配
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+# springdoc-openapi项目配置
+springdoc:
+  default-flat-param-object: true
+  swagger-ui:
+    path: /swagger-ui.html
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: '秒杀测试'
+      paths-to-match: '/**'
+      packages-to-scan: com.shuishu.demo.seckill.controller

@@ -1,6 +1,7 @@
 package com.shuishu.demo.seckill.controller;
 
 
+import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import com.shuishu.demo.seckill.entity.ApiResponse;
 import com.shuishu.demo.seckill.service.SeckillService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,7 +42,7 @@ public class SeckillController {
 
     Lock lock = new ReentrantLock(true);
 
-
+    @ApiOperationSupport(order = 1)
     @Operation(summary = "方式一：lock锁", description = "会出现超卖的情况：这里在业务方法开始加了锁，在业务方法结束后释放了锁。但这里的事务提交却不是这样的，有可能在事务提交之前，就已经把锁释放了，这样会导致商品超卖现象")
     @PostMapping("start/lock/one")
     public ApiResponse<String> startLock(long goodsInventoryId) {
@@ -61,7 +62,7 @@ public class SeckillController {
         return ApiResponse.error();
     }
 
-
+    @ApiOperationSupport(order = 3)
     @Operation(summary = "方式一：改进版加锁", description = "可以解决事务未提交之前，锁释放的问题")
     @PostMapping("start/lock/two")
     public ApiResponse<String> startLock2(long goodsInventoryId) {
@@ -87,6 +88,7 @@ public class SeckillController {
     }
 
 
+    @ApiOperationSupport(order = 5)
     @Operation(summary = "方式二：AOP版加锁", description = "AOP版加锁")
     @PostMapping("start/aop")
     public ApiResponse<String> startAop(long goodsInventoryId) {
@@ -108,6 +110,7 @@ public class SeckillController {
     }
 
 
+    @ApiOperationSupport(order = 7)
     @Operation(summary = "方式三：悲观锁1", description = "使用for update一定要加上事务，当事务处理完后，for update才会将行级锁解除。如果请求数和秒杀商品数量一致，会出现少卖")
     @PostMapping("/start/pes/lock/one")
     public ApiResponse<String> startPesLockOne(long goodsInventoryId) {
@@ -127,7 +130,7 @@ public class SeckillController {
         return ApiResponse.error();
     }
 
-
+    @ApiOperationSupport(order = 9)
     @Operation(summary = "方式四：悲观锁2", description = "")
     @PostMapping("/start/pes/lock/two")
     public ApiResponse<String> startPesLockTwo(long goodsInventoryId) {
@@ -147,7 +150,7 @@ public class SeckillController {
         return ApiResponse.error();
     }
 
-
+    @ApiOperationSupport(order = 11)
     @Operation(summary = "方式五：乐观锁", description = "乐观锁会出现大量的数据更新异常（抛异常就会导致购买失败），会出现少买的情况，不推荐使用乐观锁")
     @PostMapping("/start/opt/lock/one")
     public ApiResponse<String> startOptLock(long goodsInventoryId) {
