@@ -2,24 +2,23 @@ package com.shuishu.demo.seckill.mapper;
 
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.shuishu.demo.seckill.entity.SecondKill;
-import org.apache.ibatis.annotations.Mapper;
+import com.shuishu.demo.seckill.entity.GoodsInventory;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 import org.springframework.stereotype.Repository;
 
 /**
- * @author ：谁书-ss
- * @date ：2023-05-21 15:40
+ * @Author ：谁书-ss
+ * @Date ：2023-05-21 15:40
  * @IDE ：IntelliJ IDEA
  * @Motto ：ABC(Always Be Coding)
  * <p></p>
- * @description ：
+ * @Description ：
  * <p></p>
  */
 @Repository
-public interface SecondKillMapper extends BaseMapper<SecondKill> {
+public interface GoodsInventoryMapper extends BaseMapper<GoodsInventory> {
     /**
      * 将此行数据进行加锁，当整个方法将事务提交后，才会解锁
      * for update进行对查询数据加锁，加的是行锁
@@ -28,7 +27,7 @@ public interface SecondKillMapper extends BaseMapper<SecondKill> {
      * @return -
      */
     @Select(value = "SELECT * FROM seckill WHERE seckill_id=#{skgId} FOR UPDATE")
-    SecondKill querySecondKillForUpdate(@Param("skgId") Long skgId);
+    GoodsInventory querySecondKillForUpdate(@Param("skgId") Long skgId);
 
     /**
      * 更新库存

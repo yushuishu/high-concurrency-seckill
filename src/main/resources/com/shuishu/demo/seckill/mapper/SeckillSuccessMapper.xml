@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.shuishu.demo.seckill.mapper.SeckillSuccessMapper">
+    <resultMap id="secondKillResultMap" type="com.shuishu.demo.seckill.entity.SeckillSuccess">
+        <id column="seckill_success_id" property="seckillSuccessId"/>
+        <result column="user_id" property="userId"/>
+        <result column="payment_state" property="paymentState"/>
+        <result column="seckill_success_create_time" property="seckillSuccessCreateTime"/>
+    </resultMap>
+
+</mapper>

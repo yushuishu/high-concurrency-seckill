@@ -4,12 +4,12 @@ package com.shuishu.demo.seckill.aop;
 import java.lang.annotation.*;
 
 /**
- * @author ：谁书-ss
- * @date ：2023-05-21 15:50
+ * @Author ：谁书-ss
+ * @Date ：2023-05-21 15:50
  * @IDE ：IntelliJ IDEA
  * @Motto ：ABC(Always Be Coding)
  * <p></p>
- * @description ：
+ * @Description ：
  * <p></p>
  */
 @Target({ElementType.PARAMETER, ElementType.METHOD})

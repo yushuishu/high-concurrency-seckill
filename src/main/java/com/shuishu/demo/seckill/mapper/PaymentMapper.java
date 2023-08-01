@@ -6,12 +6,12 @@ import com.shuishu.demo.seckill.entity.Payment;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
- * @author ：谁书-ss
- * @date ：2023-05-21 15:39
+ * @Author ：谁书-ss
+ * @Date ：2023-05-21 15:39
  * @IDE ：IntelliJ IDEA
  * @Motto ：ABC(Always Be Coding)
  * <p></p>
- * @description ：
+ * @Description ：
  * <p></p>
  */
 @Mapper

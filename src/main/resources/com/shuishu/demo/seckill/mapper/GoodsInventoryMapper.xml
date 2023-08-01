@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.shuishu.demo.seckill.mapper.GoodsInventoryMapper">
+    <resultMap id="secondKillResultMap" type="com.shuishu.demo.seckill.entity.GoodsInventory">
+        <id column="goods_inventory_id" property="goodsInventoryId"/>
+        <result column="goods_name" property="goodsName"/>
+        <result column="goods_number" property="goodsNumber"/>
+        <result column="goods_start_time" property="goodsStartTime"/>
+        <result column="goods_end_time" property="goodsEndTime"/>
+        <result column="goods_create_time" property="goodsCreateTime"/>
+        <result column="version" property="version"/>
+    </resultMap>
+
+</mapper>

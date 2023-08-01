@@ -4,13 +4,13 @@ package com.shuishu.demo.seckill.service.impl;
 import com.shuishu.demo.seckill.aop.ServiceLock;
 import com.shuishu.demo.seckill.entity.ApiResponse;
 import com.shuishu.demo.seckill.entity.Payment;
-import com.shuishu.demo.seckill.entity.SecondKill;
-import com.shuishu.demo.seckill.entity.SuccessKilled;
+import com.shuishu.demo.seckill.entity.GoodsInventory;
+import com.shuishu.demo.seckill.entity.SeckillSuccess;
 import com.shuishu.demo.seckill.enums.SecondKillEnum;
 import com.shuishu.demo.seckill.exception.BusinessException;
 import com.shuishu.demo.seckill.mapper.PaymentMapper;
-import com.shuishu.demo.seckill.mapper.SecondKillMapper;
-import com.shuishu.demo.seckill.mapper.SuccessKilledMapper;
+import com.shuishu.demo.seckill.mapper.GoodsInventoryMapper;
+import com.shuishu.demo.seckill.mapper.SeckillSuccessMapper;
 import com.shuishu.demo.seckill.service.SeckillService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -23,12 +23,12 @@ import java.util.concurrent.locks.ReentrantLock;
 
 
 /**
- * @author ：谁书-ss
- * @date ：2023-05-21 15:29
+ * @Author ：谁书-ss
+ * @Date ：2023-05-21 15:29
  * @IDE ：IntelliJ IDEA
  * @Motto ：ABC(Always Be Coding)
  * <p></p>
- * @description ：秒杀
+ * @Description ：秒杀
  * <p></p>
  */
 @Log4j2
@@ -40,13 +40,13 @@ public class SeckillServiceImpl implements SeckillService {
 
     private final PaymentMapper paymentMapper;
 
-    private final SecondKillMapper secondKillMapper;
+    private final GoodsInventoryMapper goodsInventoryMapper;
 
-    private final SuccessKilledMapper successKilledMapper;
+    private final SeckillSuccessMapper seckillSuccessMapper;
 
 
     @Override
-    public ApiResponse<String> startSecondKillByLock(long skgId, Long userId) {
+    public ApiResponse<String> startSecondKillByLock(long goodsInventoryId, Long userId) {
         /**
          * 1.脏读：事务A读取了事务B更新的数据，然后B回滚操作，那么A读取到的数据是脏数据
          * 2.不可重复读：事务 A 多次读取同一数据，事务 B 在事务A多次读取的过程中，对数据作了更新并提交，导致事务A多次读取同一数据时，结果 不一致。
@@ -63,32 +63,30 @@ public class SeckillServiceImpl implements SeckillService {
          *      但数据库默认的事务隔离级别为 可重复读(repeatable-read)，也就不可能出现脏读
          * 3)给自己留个坑思考：为什么分布式锁(zk和redis)没有问题？(事实是有问题的，由于redis释放锁需要远程通信，不那么明显而已)
          */
-
         lock.lock();
         try {
             // 校验库存
-            SecondKill secondKill = secondKillMapper.selectById(skgId);
-            Integer number = secondKill.getNumber();
+            GoodsInventory goodsInventory = goodsInventoryMapper.selectById(goodsInventoryId);
+            Integer number = goodsInventory.getGoodsNumber();
             if (number > 0) {
                 // 扣库存
-                secondKill.setNumber(number - 1);
-                secondKillMapper.updateById(secondKill);
-                // 创建订单
-                SuccessKilled killed = new SuccessKilled();
-                killed.setSeckillId(skgId);
-                killed.setUserId(userId);
-                killed.setState(0);
-                killed.setCreateTime(new Timestamp(System.currentTimeMillis()));
-                successKilledMapper.insert(killed);
-
-                // 模拟支付
+                goodsInventory.setGoodsNumber(number - 1);
+                goodsInventoryMapper.updateById(goodsInventory);
+                // 创建秒杀成功订单
+                SeckillSuccess seckillSuccess = new SeckillSuccess();
+                seckillSuccess.setSeckillSuccessId(goodsInventoryId);
+                seckillSuccess.setUserId(userId);
+                seckillSuccess.setPaymentState(0);
+                seckillSuccess.setSeckillSuccessCreateTime(new Timestamp(System.currentTimeMillis()));
+                seckillSuccessMapper.insert(seckillSuccess);
+                // 支付
                 Payment payment = new Payment();
-                payment.setSeckillId(skgId);
-                payment.setSeckillId(skgId);
+                payment.setGoodsInventoryId(goodsInventoryId);
+                payment.setSeckillSuccessId(seckillSuccess.getSeckillSuccessId());
                 payment.setUserId(userId);
-                payment.setMoney(40.0);
-                payment.setState(1);
-                payment.setCreateTime(new Timestamp(System.currentTimeMillis()));
+                payment.setPaymentMoney(40.0);
+                payment.setPaymentState(1);
+                payment.setPaymentCreateTime(new Timestamp(System.currentTimeMillis()));
                 paymentMapper.insert(payment);
             } else {
                 return ApiResponse.error(SecondKillEnum.StateEnum.END.getInfo());
@@ -105,31 +103,30 @@ public class SeckillServiceImpl implements SeckillService {
 
 
     @Override
-    public ApiResponse<String> startSecondKillByLock2(long skgId, Long userId) {
+    public ApiResponse<String> startSecondKillByLock2(long goodsInventoryId, Long userId) {
         try {
             // 校验库存
-            SecondKill secondKill = secondKillMapper.selectById(skgId);
-            Integer number = secondKill.getNumber();
+            GoodsInventory goodsInventory = goodsInventoryMapper.selectById(goodsInventoryId);
+            Integer number = goodsInventory.getGoodsNumber();
             if (number > 0) {
                 // 扣库存
-                secondKill.setNumber(number - 1);
-                secondKillMapper.updateById(secondKill);
-                // 创建订单
-                SuccessKilled killed = new SuccessKilled();
-                killed.setSeckillId(skgId);
-                killed.setUserId(userId);
-                killed.setState(0);
-                killed.setCreateTime(new Timestamp(System.currentTimeMillis()));
-                successKilledMapper.insert(killed);
-
-                // 模拟支付
+                goodsInventory.setGoodsNumber(number - 1);
+                goodsInventoryMapper.updateById(goodsInventory);
+                // 创建秒杀成功订单
+                SeckillSuccess seckillSuccess = new SeckillSuccess();
+                seckillSuccess.setSeckillSuccessId(goodsInventoryId);
+                seckillSuccess.setUserId(userId);
+                seckillSuccess.setPaymentState(0);
+                seckillSuccess.setSeckillSuccessCreateTime(new Timestamp(System.currentTimeMillis()));
+                seckillSuccessMapper.insert(seckillSuccess);
+                // 支付
                 Payment payment = new Payment();
-                payment.setSeckillId(skgId);
-                payment.setSeckillId(skgId);
+                payment.setGoodsInventoryId(goodsInventoryId);
+                payment.setSeckillSuccessId(seckillSuccess.getSeckillSuccessId());
                 payment.setUserId(userId);
-                payment.setMoney(40.0);
-                payment.setState(1);
-                payment.setCreateTime(new Timestamp(System.currentTimeMillis()));
+                payment.setPaymentMoney(40.0);
+                payment.setPaymentState(1);
+                payment.setPaymentCreateTime(new Timestamp(System.currentTimeMillis()));
                 paymentMapper.insert(payment);
             } else {
                 return ApiResponse.error(SecondKillEnum.StateEnum.END.getInfo());
@@ -143,37 +140,36 @@ public class SeckillServiceImpl implements SeckillService {
     /**
      * 方式二：AOP版加锁
      *
-     * @param skgId 秒杀商品id
-     * @param userId 用户id
+     * @param goodsInventoryId 秒杀商品id
+     * @param userId           用户id
      * @return -
      */
     @ServiceLock
     @Override
-    public ApiResponse<String> startSecondKillByAop(long skgId, Long userId) {
+    public ApiResponse<String> startSecondKillByAop(long goodsInventoryId, Long userId) {
         try {
             // 校验库存
-            SecondKill secondKill = secondKillMapper.selectById(skgId);
-            Integer number = secondKill.getNumber();
+            GoodsInventory goodsInventory = goodsInventoryMapper.selectById(goodsInventoryId);
+            Integer number = goodsInventory.getGoodsNumber();
             if (number > 0) {
                 // 扣库存
-                secondKill.setNumber(number - 1);
-                secondKillMapper.updateById(secondKill);
-                // 创建订单
-                SuccessKilled killed = new SuccessKilled();
-                killed.setSeckillId(skgId);
-                killed.setUserId(userId);
-                killed.setState(0);
-                killed.setCreateTime(new Timestamp(System.currentTimeMillis()));
-                successKilledMapper.insert(killed);
-
-                // 模拟支付
+                goodsInventory.setGoodsNumber(number - 1);
+                goodsInventoryMapper.updateById(goodsInventory);
+                // 创建秒杀成功订单
+                SeckillSuccess seckillSuccess = new SeckillSuccess();
+                seckillSuccess.setSeckillSuccessId(goodsInventoryId);
+                seckillSuccess.setUserId(userId);
+                seckillSuccess.setPaymentState(0);
+                seckillSuccess.setSeckillSuccessCreateTime(new Timestamp(System.currentTimeMillis()));
+                seckillSuccessMapper.insert(seckillSuccess);
+                // 支付
                 Payment payment = new Payment();
-                payment.setSeckillId(skgId);
-                payment.setSeckillId(skgId);
+                payment.setGoodsInventoryId(goodsInventoryId);
+                payment.setSeckillSuccessId(seckillSuccess.getSeckillSuccessId());
                 payment.setUserId(userId);
-                payment.setMoney(40.0);
-                payment.setState(1);
-                payment.setCreateTime(new Timestamp(System.currentTimeMillis()));
+                payment.setPaymentMoney(40.0);
+                payment.setPaymentState(1);
+                payment.setPaymentCreateTime(new Timestamp(System.currentTimeMillis()));
                 paymentMapper.insert(payment);
             } else {
                 return ApiResponse.error(SecondKillEnum.StateEnum.END.getInfo());
@@ -186,31 +182,30 @@ public class SeckillServiceImpl implements SeckillService {
 
 
     @Override
-    public ApiResponse<String> startSecondKillByUpdate(long skgId, Long userId) {
+    public ApiResponse<String> startSecondKillByUpdate(long goodsInventoryId, Long userId) {
         try {
             // 校验库存
-            SecondKill secondKill = secondKillMapper.querySecondKillForUpdate(skgId);
-            Integer number = secondKill.getNumber();
+            GoodsInventory goodsInventory = goodsInventoryMapper.querySecondKillForUpdate(goodsInventoryId);
+            Integer number = goodsInventory.getGoodsNumber();
             if (number > 0) {
                 // 扣库存
-                secondKill.setNumber(number - 1);
-                secondKillMapper.updateById(secondKill);
-                // 创建订单
-                SuccessKilled killed = new SuccessKilled();
-                killed.setSeckillId(skgId);
-                killed.setUserId(userId);
-                killed.setState(0);
-                killed.setCreateTime(new Timestamp(System.currentTimeMillis()));
-                successKilledMapper.insert(killed);
-
-                // 模拟支付
+                goodsInventory.setGoodsNumber(number - 1);
+                goodsInventoryMapper.updateById(goodsInventory);
+                // 创建秒杀成功订单
+                SeckillSuccess seckillSuccess = new SeckillSuccess();
+                seckillSuccess.setSeckillSuccessId(goodsInventoryId);
+                seckillSuccess.setUserId(userId);
+                seckillSuccess.setPaymentState(0);
+                seckillSuccess.setSeckillSuccessCreateTime(new Timestamp(System.currentTimeMillis()));
+                seckillSuccessMapper.insert(seckillSuccess);
+                // 支付
                 Payment payment = new Payment();
-                payment.setSeckillId(skgId);
-                payment.setSeckillId(skgId);
+                payment.setGoodsInventoryId(goodsInventoryId);
+                payment.setSeckillSuccessId(seckillSuccess.getSeckillSuccessId());
                 payment.setUserId(userId);
-                payment.setMoney(40.0);
-                payment.setState(1);
-                payment.setCreateTime(new Timestamp(System.currentTimeMillis()));
+                payment.setPaymentMoney(40.0);
+                payment.setPaymentState(1);
+                payment.setPaymentCreateTime(new Timestamp(System.currentTimeMillis()));
                 paymentMapper.insert(payment);
             } else {
                 return ApiResponse.error(SecondKillEnum.StateEnum.END.getInfo());
@@ -223,27 +218,26 @@ public class SeckillServiceImpl implements SeckillService {
 
 
     @Override
-    public ApiResponse<String> startPesLockTwo(long skgId, Long userId) {
+    public ApiResponse<String> startPesLockTwo(long goodsInventoryId, Long userId) {
         try {
             // 不校验，直接扣库存更新
-            int result = secondKillMapper.updateSecondKillById(skgId);
+            int result = goodsInventoryMapper.updateSecondKillById(goodsInventoryId);
             if (result > 0) {
-                // 创建订单
-                SuccessKilled killed = new SuccessKilled();
-                killed.setSeckillId(skgId);
-                killed.setUserId(userId);
-                killed.setState(0);
-                killed.setCreateTime(new Timestamp(System.currentTimeMillis()));
-                successKilledMapper.insert(killed);
-
-                // 模拟支付
+                // 创建秒杀成功订单
+                SeckillSuccess seckillSuccess = new SeckillSuccess();
+                seckillSuccess.setSeckillSuccessId(goodsInventoryId);
+                seckillSuccess.setUserId(userId);
+                seckillSuccess.setPaymentState(0);
+                seckillSuccess.setSeckillSuccessCreateTime(new Timestamp(System.currentTimeMillis()));
+                seckillSuccessMapper.insert(seckillSuccess);
+                // 支付
                 Payment payment = new Payment();
-                payment.setSeckillId(skgId);
-                payment.setSeckillId(skgId);
+                payment.setGoodsInventoryId(goodsInventoryId);
+                payment.setSeckillSuccessId(seckillSuccess.getSeckillSuccessId());
                 payment.setUserId(userId);
-                payment.setMoney(40.0);
-                payment.setState(1);
-                payment.setCreateTime(new Timestamp(System.currentTimeMillis()));
+                payment.setPaymentMoney(40.0);
+                payment.setPaymentState(1);
+                payment.setPaymentCreateTime(new Timestamp(System.currentTimeMillis()));
                 paymentMapper.insert(payment);
             } else {
                 return ApiResponse.error(SecondKillEnum.StateEnum.END.getInfo());
@@ -256,31 +250,30 @@ public class SeckillServiceImpl implements SeckillService {
 
 
     @Override
-    public ApiResponse<String> startSecondKillByPesLock(long skgId, Long userId, int number) {
+    public ApiResponse<String> startSecondKillByPesLock(long goodsInventoryId, Long userId, int number) {
         // 乐观锁，不进行库存数量的校验
         try {
             // 不校验，直接扣库存更新
-            SecondKill kill = secondKillMapper.selectById(skgId);
+            GoodsInventory goodsInventory = goodsInventoryMapper.selectById(goodsInventoryId);
             // 剩余的数量应该要大于等于秒杀的数量
-            if (kill.getNumber() >= number) {
-                int result = secondKillMapper.updateSecondKillByVersion(number,skgId,kill.getVersion());
+            if (goodsInventory.getGoodsNumber() >= number) {
+                int result = goodsInventoryMapper.updateSecondKillByVersion(number, goodsInventoryId, goodsInventory.getVersion());
                 if (result > 0) {
-                    // 创建订单
-                    SuccessKilled killed = new SuccessKilled();
-                    killed.setSeckillId(skgId);
-                    killed.setUserId(userId);
-                    killed.setState(0);
-                    killed.setCreateTime(new Timestamp(System.currentTimeMillis()));
-                    successKilledMapper.insert(killed);
-
-                    // 模拟支付
+                    // 创建秒杀成功订单
+                    SeckillSuccess seckillSuccess = new SeckillSuccess();
+                    seckillSuccess.setSeckillSuccessId(goodsInventoryId);
+                    seckillSuccess.setUserId(userId);
+                    seckillSuccess.setPaymentState(0);
+                    seckillSuccess.setSeckillSuccessCreateTime(new Timestamp(System.currentTimeMillis()));
+                    seckillSuccessMapper.insert(seckillSuccess);
+                    // 支付
                     Payment payment = new Payment();
-                    payment.setSeckillId(skgId);
-                    payment.setSeckillId(skgId);
+                    payment.setGoodsInventoryId(goodsInventoryId);
+                    payment.setSeckillSuccessId(seckillSuccess.getSeckillSuccessId());
                     payment.setUserId(userId);
-                    payment.setMoney(40.0);
-                    payment.setState(1);
-                    payment.setCreateTime(new Timestamp(System.currentTimeMillis()));
+                    payment.setPaymentMoney(40.0);
+                    payment.setPaymentState(1);
+                    payment.setPaymentCreateTime(new Timestamp(System.currentTimeMillis()));
                     paymentMapper.insert(payment);
                 } else {
                     return ApiResponse.error(SecondKillEnum.StateEnum.END.getInfo());
@@ -291,7 +284,6 @@ public class SeckillServiceImpl implements SeckillService {
         }
         return ApiResponse.success(SecondKillEnum.StateEnum.SUCCESS.getInfo(), null);
     }
-
 
 
 }

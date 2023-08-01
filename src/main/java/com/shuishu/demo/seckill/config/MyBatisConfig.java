@@ -8,12 +8,12 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 /**
- * @author ：谁书-ss
- * @date ：2023-05-21 15:45
+ * @Author ：谁书-ss
+ * @Date ：2023-05-21 15:45
  * @IDE ：IntelliJ IDEA
  * @Motto ：ABC(Always Be Coding)
  * <p></p>
- * @description ：
+ * @Description ：
  * <p></p>
  */
 @Configuration

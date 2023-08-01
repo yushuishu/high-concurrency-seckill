@@ -13,33 +13,20 @@ import java.util.Date;
 
 /**
  * @Author ：谁书-ss
- * @Date ：2023-05-21 15:08
+ * @Date ：2023-05-21 15:12
  * @IDE ：IntelliJ IDEA
  * @Motto ：ABC(Always Be Coding)
  * <p></p>
- * @Description ：
+ * @Description ：秒杀成功明细表
  * <p></p>
  */
 @Setter
 @Getter
 @ToString
-@TableName("payment")
-public class Payment {
-
-    @TableId(value = "payment_id", type = IdType.AUTO)
-    private Long paymentId;
-
-    /**
-     * 商品秒杀成功ID
-     */
-    @TableField("seckill_success_id")
+@TableName("seckill_success")
+public class SeckillSuccess {
+    @TableId(value = "seckill_success_id", type = IdType.AUTO)
     private Long seckillSuccessId;
-
-    /**
-     * 商品库存ID
-     */
-    @TableField("goods_inventory_id")
-    private Long goodsInventoryId;
 
     @TableField("user_id")
     private Long userId;
@@ -50,16 +37,7 @@ public class Payment {
     @TableField("payment_state")
     private Integer paymentState;
 
-    /**
-     * 支付金额
-     */
-    @TableField("payment_money")
-    private Double paymentMoney;
-
-    /**
-     * 支付订单创建时间
-     */
-    @TableField("payment_create_time")
-    private Date paymentCreateTime;
+    @TableField("seckill_success_create_time")
+    private Date seckillSuccessCreateTime;
 
 }

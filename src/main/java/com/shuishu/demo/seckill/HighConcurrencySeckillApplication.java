@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 
 /**
- * @author ：谁书-ss
- * @date   ： 2023-05-11 '12:54'
+ * @Author ：谁书-ss
+ * @Date   ： 2023-05-11 '12:54'
  * @IDE    ：IntelliJ IDEA
  * @Motto  ：ABC(Always Be Coding)
  * <p></p>

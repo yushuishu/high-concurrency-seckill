@@ -7,12 +7,12 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 
 /**
- * @author ：谁书-ss
- * @date ：2023-05-21 15:33
+ * @Author ：谁书-ss
+ * @Date ：2023-05-21 15:33
  * @IDE ：IntelliJ IDEA
  * @Motto ：ABC(Always Be Coding)
  * <p></p>
- * @description ：统一响应对象
+ * @Description ：统一响应对象
  * <p></p>
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)

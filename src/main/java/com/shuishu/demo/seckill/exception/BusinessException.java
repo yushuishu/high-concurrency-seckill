@@ -2,12 +2,12 @@ package com.shuishu.demo.seckill.exception;
 
 
 /**
- * @author ：谁书-ss
- * @date ：2023-05-21 15:43
+ * @Author ：谁书-ss
+ * @Date ：2023-05-21 15:43
  * @IDE ：IntelliJ IDEA
  * @Motto ：ABC(Always Be Coding)
  * <p></p>
- * @description ：
+ * @Description ：
  * <p></p>
  */
 public class BusinessException extends RuntimeException {

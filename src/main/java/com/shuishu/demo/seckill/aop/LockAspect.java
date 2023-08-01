@@ -14,12 +14,12 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
- * @author ：谁书-ss
- * @date ：2023-05-21 15:48
+ * @Author ：谁书-ss
+ * @Date ：2023-05-21 15:48
  * @IDE ：IntelliJ IDEA
  * @Motto ：ABC(Always Be Coding)
  * <p></p>
- * @description ：
+ * @Description ：
  * <p></p>
  */
 @Slf4j
