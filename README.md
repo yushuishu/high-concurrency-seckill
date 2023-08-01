@@ -7,9 +7,9 @@
 
 ## 介绍
 
-高并发商品秒杀Demo
-
 项目基于 [springboot@3.0.6](https://spring.io/projects/spring-boot) 系列开发，开发环境使用 [jdk@17.x](https://www.oracle.com/java/technologies/downloads/#java17)。
+
+高并发商品秒杀Demo
 
 ## 预览
 
