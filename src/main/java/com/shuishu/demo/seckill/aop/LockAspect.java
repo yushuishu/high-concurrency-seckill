@@ -10,6 +10,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -43,14 +44,24 @@ public class LockAspect {
 
     @Around("lockAspect()")
     public  Object around(ProceedingJoinPoint joinPoint) {
-        lock.lock();
-        Object obj = null;
+        boolean lockAcquired = false;
         try {
-            obj = joinPoint.proceed();
-        } catch (Throwable e) {
-            e.printStackTrace();
-        } finally{
-            lock.unlock();
+            lockAcquired = lock.tryLock(10, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        Object obj = null;
+        if (lockAcquired) {
+            try {
+                obj = joinPoint.proceed();
+            } catch (Throwable e) {
+                e.printStackTrace();
+                throw new RuntimeException(e.getMessage());
+            } finally{
+                lock.unlock();
+            }
+        } else {
+            throw new RuntimeException("系统繁忙，请稍后再试");
         }
         return obj;
     }
